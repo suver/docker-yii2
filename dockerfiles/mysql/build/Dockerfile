@@ -4,4 +4,4 @@ RUN echo "Europe/Moscow" > /etc/timezone && dpkg-reconfigure --frontend noninter
 COPY my.cnf /etc/mysql/my.cnf
 
 EXPOSE 3306
-CMD ["mysqld"]
+CMD ["mysqld --initialize"]

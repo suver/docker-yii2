@@ -1,0 +1,57 @@
+version: '2'
+services:
+
+  busybox:
+    image: busybox
+    volumes:
+    - ./src:/var/www
+
+  nginx:
+    image: nginx:1.9.6
+    volumes:
+    - ./src:/var/www
+    - ./dockerfiles/nginx/conf.d:/etc/nginx/conf.d
+    - ./logs/nginx/:/var/log/nginx
+    ports:
+    - "80:80"
+
+  php-fpm:
+    build: ./dockerfiles/php5.6/build
+    volumes:
+    - ./src:/var/www:rw
+    - ./dockerfiles/php5.6/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    - ./dockerfiles/php5.6/php.ini:/usr/local/etc/php/php.ini
+    - ./dockerfiles/php5.6/auth.json:/root/.composer/auth.json
+    working_dir: /var/www/
+    expose:
+    - 9000
+    environment:
+    - ICU_DATA=/opt/icu/
+
+  mongo:
+    image: mongo:3.2.4
+    volumes:
+    #- ./dockerfiles/mongo/db:/data/db:rw
+    - ./dockerfiles/mongo/db:/data/db
+    - ./dockerfiles/mongo/mongod.conf:/etc/mongodb.conf
+    command: "mongod --config /etc/mongodb.conf"
+
+  mysql:
+    #build: ./dockerfiles/mysql/build
+    image: mysql
+    volumes:
+    - ./dockerfiles/mysql/db:/var/lib/mysql
+    - ./dockerfiles/mysql/my.cnf:/etc/mysql/my.cnf
+    ports:
+    - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'simple'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'user'
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+
+  memcached:
+    image: memcached

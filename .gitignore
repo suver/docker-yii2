@@ -1,3 +1,5 @@
 /logs/*
-/.data/*
+/dockerfiles/mongo/db/*
+/dockerfiles/mysql/db/*
+.idea
 .env

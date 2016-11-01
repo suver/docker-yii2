@@ -16,16 +16,23 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl
 
-RUN pecl install xdebug
-RUN pecl install memcache
 
-COPY conf/ext-xdebug.ini /usr/local/etc/php/conf.d/ext-xdebug.ini
-COPY conf/ext-memcache.ini /usr/local/etc/php/conf.d/ext-memcache.ini
-COPY conf/php.ini /usr/local/etc/php/php.ini
+RUN docker-php-ext-configure mbstring \
+    && docker-php-ext-install mbstring zip intl bcmath pdo_mysql mcrypt \
+    && pecl install mongo
+    && echo extension=mongo.so > /usr/local/etc/php/conf.d/ext-mongo.ini \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && pecl install memcache \
+    && ocker-php-ext-enable memcache
+
+#COPY ./../ext-xdebug.ini /usr/local/etc/php/conf.d/ext-xdebug.ini
+#COPY ./../ext-memcache.ini /usr/local/etc/php/conf.d/ext-memcache.ini
+#COPY ./php.ini /usr/local/etc/php/php.ini
 
 # Install SASS
-RUN apt-get install -y ruby-full rubygems-integration
-RUN gem install sass
+#RUN apt-get install -y ruby-full rubygems-integration
+#RUN gem install sass
 
 EXPOSE 9000
 EXPOSE 18999
@@ -41,8 +48,3 @@ env PATH "$PATH:/var/www/vendor/codeception/codeception"
 
 CMD ["php-fpm"]
 
-
-FROM php:5.6-cli
-COPY . /usr/src/myapp
-WORKDIR /usr/src/myapp
-CMD [ "php", "./your-script.php" ]

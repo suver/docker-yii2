@@ -46,14 +46,19 @@ e39b1a43da21        rabbitmq:management     "docker-entrypoint.sh"   25 minutes 
 ```
 
 
-`sudo docker exec -it dockersimplefarpse_mysql_1 mysql -u root -proot -e "create database simple_farpse"`
+`sudo docker exec -it simple_mysql_1 mysql -uroot -proot -e "create database simpl"`
 
 ```bash
 
-suver@Inspiron:~$ sudo docker exec -it dockersimplefarpse_mysql mysql -u root -proot -e "create database simple_farpse"
+suver@Inspiron:~$ sudo docker exec -it simple_mysql mysql -u root -proot -e "create database simple_farpse"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 
 ```
+
+
+`sudo docker exec -it dockersimplefarpse_php-fpm_1 ./yii migrate`
+
+
 
 
 
